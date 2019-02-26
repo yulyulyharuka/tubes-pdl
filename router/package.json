@@ -1,0 +1,21 @@
+{
+  "name": "router",
+  "version": "1.0.0",
+  "description": "",
+  "main": "connection.js",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "tubes-pdl"
+  },
+  "author": "assdf",
+  "license": "ISC"
+}
