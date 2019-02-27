@@ -16,6 +16,25 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: is_date_valid(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.is_date_valid() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+ begin
+  if(new.start_date > new.end_date) then
+   raise 'Require: start_date > end_date';
+  else
+   return new;
+  end if;
+ end;
+$$;
+
+
+ALTER FUNCTION public.is_date_valid() OWNER TO postgres;
+
+--
 -- Name: is_query_valid_employees(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -57,6 +76,25 @@ $$;
 
 
 ALTER FUNCTION public.is_query_valid_employees_update() OWNER TO postgres;
+
+--
+-- Name: is_work_valid(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.is_work_valid() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+ begin
+  if(new.work_start > new.work_end) then
+   raise 'Require: work_start > work_end';
+  else
+   return new;
+  end if;
+ end;
+$$;
+
+
+ALTER FUNCTION public.is_work_valid() OWNER TO postgres;
 
 SET default_tablespace = '';
 
@@ -180,6 +218,13 @@ ALTER TABLE ONLY public.employees_data
 
 
 --
+-- Name: employees is_date_valid; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER is_date_valid BEFORE INSERT OR UPDATE ON public.employees FOR EACH ROW EXECUTE PROCEDURE public.is_date_valid();
+
+
+--
 -- Name: employees is_query_valid; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -191,6 +236,13 @@ CREATE TRIGGER is_query_valid BEFORE INSERT ON public.employees FOR EACH ROW EXE
 --
 
 CREATE TRIGGER is_query_valid_update BEFORE UPDATE ON public.employees FOR EACH ROW EXECUTE PROCEDURE public.is_query_valid_employees_update();
+
+
+--
+-- Name: departments is_work_valid; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER is_work_valid BEFORE INSERT OR UPDATE ON public.departments FOR EACH ROW EXECUTE PROCEDURE public.is_work_valid();
 
 
 --
