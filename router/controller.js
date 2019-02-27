@@ -35,3 +35,7 @@ exports.intro = function(req, res) {
 exports.result = function(req, res) {
     res.render('result');
 }
+
+exports.creator = function(req, res) {
+    res.render('creator');
+}

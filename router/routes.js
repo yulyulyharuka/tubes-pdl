@@ -17,4 +17,7 @@ module.exports = function(app) {
 
     app.route('/result')
         .get(task.result);
+
+    app.route('/creator')
+        .get(task.creator);
 };
