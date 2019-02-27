@@ -14,158 +14,206 @@
       <div class="jumbotron text-center">
           <h1>Query to Temporal Database</h1>
       </div>
-      <form action="">
+      <form name="queryform" id="queryform" action="/query" method="post">
         <div class="form-group">
           <label for="query">Insert Your Query</label>
-          <textarea class="form-control" rows="5" name="query" id="query"></textarea>
+          <textarea class="form-control" rows="5" name="query" id="query"><%= query %></textarea>
         </div>
-        <button type="button" class="btn btn-success col-sm-10" id="submit">Execute</button>
-        <button type="button" class="btn btn-secondary col-sm-2" data-toggle="modal" data-target="#myModal">Get Sample Query</button>
+        <button type="button" class="btn btn-info col-sm-2" data-toggle="modal" data-target="#schemaModal">Schema</button>
+        <button type="submit" class="btn btn-success col-sm-8" id="submit">Execute</button>
+        <button type="button" class="btn btn-warning col-sm-2" data-toggle="modal" data-target="#sampleModal">Sample Query</button>
       </form>
 
-      <hr>
-      <div ng-repeat="x in res" id='result'>
-        <p>{{x}}</p>
+      <div class="table-responsive col-md-12 table-wrapper-scroll-y" name="result" id="result">
+          <%if (locals.check) {  %>
+              <%if (err) {  %>
+                <div class="alert alert-danger">
+                  <%= err %>
+                </div>
+              <% } else { %>
+                <div class="alert alert-success">
+                  <%= message %>
+                </div>
+                <table class="table table-striped table-hover table-bordered">
+                  <thead>
+                    <tr>
+                    <% for(let i = 0; i < results.fields.length; i++) { %>
+                      <th><%= results.fields[i].name %> </th>
+                    <% } %>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for (let i = 0; i < results.rows.length; i++) { %>
+                      <tr>
+                        <% Object.keys(results.rows[i]).forEach(function(prop) { %>
+                          <th>
+                            <%= results.rows[i][prop] %>
+                          </th>
+                        <% }); %>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              <% } %>
+            <% } %>
       </div>
-      <!-- <div class="table-responsive col-md-12 table-wrapper-scroll-y" name="result" id="result">
-        <table class="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Column 1</th>
-              <th>Column 2</th>
-              <th>Column 3</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td id="row_1">Row 1</td>
-              <td>Row 2</td>
-              <td>Row 3</td>
-            </tr>
-            <tr>
-              <td>Row 1</td>
-              <td>Row 2</td>
-              <td>Row 3</td>
-            </tr>
-            <tr>
-              <td>Row 1</td>
-              <td>Row 2</td>
-              <td>Row 3</td>
-            </tr>
-          <tbody>
-
-          </tbody>
-        </table>
-      </div> -->
 
       <!-- Modal -->
-      <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal fade" id="schemaModal" role="dialog">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Modal Header</h4>
+              <h4 class="modal-title">Schema</h4>
+            </div>
+            <div class="modal-body">
+
+              <label for="query">departments</label>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>id_department (int)</th>
+                    <th>name (text)</th>
+                    <th>salary (text)</th>
+                    <th>work_start (time hh:mm:ss)</th>
+                    <th>work_end (time hh:mm:ss)</th>
+                  </tr>
+                </thead>
+              </table>
+
+              <label for="query">employees_data</label>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>id_employee (int)</th>
+                    <th>name (text)</th>
+                    <th>birth_date (date yyyy-mm-dd)</th>
+                  </tr>
+                </thead>
+              </table>
+
+              <label for="query">employees</label>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>id_employee (int)</th>
+                    <th>id_department (int)</th>
+                    <th>start_date (date yyyy-mm-dd)</th>
+                    <th>end_date (date yyyy-mm-dd)</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Modal -->
+      <div class="modal fade" id="sampleModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Query Sample</h4>
             </div>
             <div class="modal-body">
               <b>Obtains :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
               <p>where '2011-11-11'::date <@ daterange(start_date, end_date);</p>
-
+              <hr>
               <b>Precedes :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
               <p>where daterange('2000-01-01', '2005-01-01') << daterange(start_date, end_date);</p>
-
+              <hr>
               <b>Meets :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
               <p>where '2017-09-21' = start_date;</p>
-
+              <hr>
               <b>Overlaps :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
-              <p>where daterange('2003-01-01', '2009-01-01') &< daterange(start_date, end_date);</p>
-
+              <p>where '2003-01-01' < start_date and start_date < '2009-01-01' and '2009-01-01'  < end_date;</p>
+              <hr>
               <b>Finished by :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
-              <p>where daterange('2003-01-01', '2014-12-12') &< daterange(start_date, end_date) and</p>
-              <p style="text-indent:30px;">'2014-12-12' = end_date;</p>
-
+              <p>where '2003-01-01' < start_date and '2014-12-12' = end_date;</p>
+              <hr>
               <b>Contains :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
-              <p>where daterange(start_date, end_date) &< daterange('2008-01-01', '2008-12-31') and</p>
-              <p style="text-indent:30px;">daterange(start_date, end_date) &> daterange('2008-01-01', '2008-12-31');</p>
-
+              <p>where '2004-01-01' < start_date and '2006-01-01'  > end_date;</p>
+              <hr>
               <b>Starts :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
-              <p>where daterange('2007-07-15', '2009-11-11') &< daterange(start_date, end_date) and</p>
-              <p style="text-indent:30px;">'2007-07-15' = start_date;</p>
-
+              <p>where '2007-07-15' = start_date and '2009-11-11' < end_date;</p>
+              <hr>
               <b>Equals :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
               <p>where daterange('2017-09-21', '2019-02-02') = daterange(start_date, end_date);</p>
-
+              <hr>
               <b>Started by :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
-              <p>where daterange(start_date, end_date) &> daterange('2007-07-15', '2009-11-11') and</p>
-              <p style="text-indent:30px;">'2007-07-15' = start_date;</p>
-
+              <p>where '2007-07-15' = start_date and '2009-11-30' > end_date;</p>
+              <hr>
               <b>During :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
-              <p>where daterange('2019-01-01', current_date) &< daterange(start_date, end_date) and</p>
-              <p style="text-indent:30px;">daterange('2019-01-01', current_date) &> daterange(start_date, end_date);</p>
-
+              <p>where '2004-01-01' > start_date and '2006-01-01' < end_date;</p>
+              <hr>
               <b>Finishes :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
-              <p>where daterange('2003-01-01', '2014-12-12') &> daterange(start_date, end_date) and</p>
-              <p style="text-indent:30px;">'2014-12-12' = end_date;</p>
-
+              <p>where '2012-01-01' > start_date and '2014-12-12' = end_date;</p>
+              <hr>
               <b>Overlapped by :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
-              <p>where daterange('2003-01-01', '2014-12-12') &> daterange(start_date, end_date);</p>
-
+              <p>where '2003-01-01' > start_date and '2003-01-01' < end_date and '2009-01-01' > end_date ;</p>
+              <hr>
               <b>Met by :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
               <p>where '2002-03-04' = end_date;</p>
-
+              <hr>
               <b>Proceded by :</b>
-              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>select tmp.name, departments.name as department_name, start_date, coalesce(end_date,current_date) as end_date</p>
               <p>from (employees join employees_data</p>
               <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
               <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
@@ -182,37 +230,3 @@
     </div>
 </body>
 </html>
-
-<script language="javascript" type="text/javascript">
-  function getData(){
-      let data = document.getElementById('result').innerHTML;
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-          if (this.readyState === 4 && this.status === 200) {
-              var json = JSON.parse(this.responseText);
-              if (json.status == 400){
-                  // document.getElementById('result').innerHTML = "query error";
-              } else {
-                  // document.getElementById('result').innerHTML = JSON.stringify(json.values.rows);
-              }
-          }
-      };
-      xhttp.open("GET", "http://localhost:3000/data", true);
-      xhttp.send();
-  }
-  getData();
-
-    $(document).ready(function(){
-      var query;
-      $("#submit").click(function(){
-        query=$("#query").val();
-        $.post("http://localhost:3000/query",{query: query}, function(status, data){
-          if(status === 200)
-            {
-              console.log("test");
-              console.log(data);
-            }
-        });
-      });
-    });
-</script>
