@@ -15,7 +15,7 @@ exports.data = function(req, res) {
 };
 
 exports.index = function(req, res) {
-    res.render('intro');
+    res.render('index');
 };
 
 exports.intro = function(req, res) {

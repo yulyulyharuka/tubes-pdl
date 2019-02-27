@@ -64,7 +64,109 @@
               <h4 class="modal-title">Modal Header</h4>
             </div>
             <div class="modal-body">
-              <p>Sug A Dig</p>
+              <b>Obtains :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where '2011-11-11'::date <@ daterange(start_date, end_date);</p>
+
+              <b>Precedes :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where daterange('2000-01-01', '2005-01-01') << daterange(start_date, end_date);</p>
+
+              <b>Meets :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where '2017-09-21' = start_date;</p>
+
+              <b>Overlaps :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where daterange('2003-01-01', '2009-01-01') &< daterange(start_date, end_date);</p>
+
+              <b>Finished by :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where daterange('2003-01-01', '2014-12-12') &< daterange(start_date, end_date) and</p>
+              <p style="text-indent:30px;">'2014-12-12' = end_date;</p>
+
+              <b>Contains :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where daterange(start_date, end_date) &< daterange('2008-01-01', '2008-12-31') and</p>
+              <p style="text-indent:30px;">daterange(start_date, end_date) &> daterange('2008-01-01', '2008-12-31');</p>
+
+              <b>Starts :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where daterange('2007-07-15', '2009-11-11') &< daterange(start_date, end_date) and</p>
+              <p style="text-indent:30px;">'2007-07-15' = start_date;</p>
+
+              <b>Equals :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where daterange('2017-09-21', '2019-02-02') = daterange(start_date, end_date);</p>
+
+              <b>Started by :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where daterange(start_date, end_date) &> daterange('2007-07-15', '2009-11-11') and</p>
+              <p style="text-indent:30px;">'2007-07-15' = start_date;</p>
+
+              <b>During :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where daterange('2019-01-01', current_date) &< daterange(start_date, end_date) and</p>
+              <p style="text-indent:30px;">daterange('2019-01-01', current_date) &> daterange(start_date, end_date);</p>
+
+              <b>Finishes :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where daterange('2003-01-01', '2014-12-12') &> daterange(start_date, end_date) and</p>
+              <p style="text-indent:30px;">'2014-12-12' = end_date;</p>
+
+              <b>Overlapped by :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where daterange('2003-01-01', '2014-12-12') &> daterange(start_date, end_date);</p>
+
+              <b>Met by :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where '2002-03-04' = end_date;</p>
+
+              <b>Proceded by :</b>
+              <p>select tmp.name, departments.name as department_name, start_date, end_date</p>
+              <p>from (employees join employees_data</p>
+              <p style="text-indent:30px;">on employees.id_employee = employees_data.id_employee) as tmp join departments </p>
+              <p style="text-indent:30px;">on tmp.id_department = departments.id_department</p>
+              <p>where daterange('2012-01-01', '2015-01-01') >> daterange(start_date, end_date);</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
