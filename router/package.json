@@ -4,6 +4,7 @@
   "description": "",
   "main": "connection.js",
   "dependencies": {
+    "dotenv": "^6.2.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "json": "^9.0.6",
