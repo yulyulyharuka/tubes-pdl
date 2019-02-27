@@ -1,29 +1,8 @@
 // Diisi menyesuaikan settingan pgsql masing2
-const { Pool, Client } = require('pg')
+var pg = require('pg')
+var conString = "postgres://postgres:password@localhost:5432/tubes";
 
-const pool = new Pool({
-  user: 'dbuser',
-  host: 'database.server.com',
-  database: 'mydb',
-  password: 'secretpassword',
-  port: 3211,
-})
-
-pool.query('SELECT NOW()', (err, res) => {
-  console.log(err, res)
-  pool.end()
-})
-
-const client = new Client({
-  user: 'dbuser',
-  host: 'database.server.com',
-  database: 'mydb',
-  password: 'secretpassword',
-  port: 3211,
-})
+var client = new pg.Client(conString);
 client.connect()
 
-client.query('SELECT NOW()', (err, res) => {
-  console.log(err, res)
-  client.end()
-})
+module.exports = client;
