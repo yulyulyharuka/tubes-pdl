@@ -18,7 +18,7 @@
           <label for="query">Insert Your Query</label>
           <textarea class="form-control" rows="5" name="query" id="query"></textarea>
         </div>
-        <button type="button" class="btn btn-success col-sm-10">Execute</button>
+        <button type="button" class="btn btn-success col-sm-10" onclick="sendQuery()">Execute</button>
         <button type="button" class="btn btn-secondary col-sm-2" data-toggle="modal" data-target="#myModal">Get Sample Query</button>
       </form>
 
@@ -198,4 +198,26 @@
         xhttp.send();
     }
     getData();
+
+    function sendQuery() {
+      let query = document.getElementById('query').value;
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+          var json = JSON.parse(this.responseText);
+          if (json.status == 400) {
+            //
+          } else {
+            let res = JSON.parse(json.values);
+            document.write(res);
+          }
+        }
+      };
+      xhttp.open("POST", "http://localhost:3000/query", true);
+      xhttp.setRequestHeader('Content-type', 'application/json');
+
+      xhttp.send(JSON.stringify({
+        "query": query
+      }))
+    }
 </script>

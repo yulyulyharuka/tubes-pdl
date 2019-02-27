@@ -5,9 +5,12 @@ module.exports = function(app) {
 
     app.route('/')
         .get(task.index);
-    
+
     app.route('/intro')
         .get(task.intro);
+
+    app.route('/query')
+        .post(task.query);
 
     app.route('/data')
         .get(task.data);
