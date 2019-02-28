@@ -13,17 +13,39 @@
         <div class="jumbotron text-center">
             <h1>Introduction To Temporal Database</h1>
         </div>
-        <div>
-            <h3><small>
-                Temporal database supports the management of time-varying information.
-            </small></h3>
-            <h3><small>
-                Two kinds of temporal aspects are of general interests:
-                <ul class="list-group">
-                    <li>When the data is true in reality, termed <b>valid time</b></li>
-                    <li>When the data is recorded in the database, termed <b>transaction time</b></li>
-                </ul>
-            </small></h3>
+        <div id="about" class="container-fluid">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h2>About Temporal Database</h2><br>
+                    <h4>Temporal database supports the management of time-varying information.</h4><br>
+                    <p>Features :</p>
+                    <ul>
+                        <li>A time period datatype, including the ability to represent time periods with no end (infinity or forever)</li>
+                        <li>The ability to define valid and transaction time period attributes and bitemporal relations</li>
+                        <li>System-maintained transaction time</li>
+                        <li>Temporal primary keys, including non-overlapping period constraints</li>
+                        <li>Temporal constraints, including non-overlapping uniqueness and referential integrity</li>
+                        <li>Update and deletion of temporal records with automatic splitting and coalescing of time periods</li>
+                        <li>Temporal queries at current time, time points in the past or future, or over durations</li>
+                        <li>Predicates for querying time periods, often based on Allen’s interval relations</li>
+                    </ul>
+                    <br>
+                    <h2>
+                        Snodgrass’ Tuple Timestamped Representation Scheme
+                    </h2>
+                    <p>Representing the conceptual relation in 1NF snapshot relations</p>
+                    <ul>
+                        <li>All attributes’ values are atomic</li>
+                        <li>Time is associated in the tuple level ( tuple timestamping )</li>
+                        <li>Easier to be implemented in RDBMS</li>
+                    </ul>
+                    <p>A bitemporal conceptual schema:</p>
+                    <p>R = (A1, ..., An, T)</p>
+                    <p>is represented into:</p>
+                    <p>R = (A1, ..., An, Ts, Te, Vs, Ve)</p>
+                    <br><a href="/result"><button class="btn btn-default btn-lg">Go To Query Tool</button></a>
+                </div>
+            </div>
         </div>
     </div>
 </body>
